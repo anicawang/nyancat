@@ -21,14 +21,13 @@ export class Assignment4 extends Scene {
         this.shapes = {
             box_1: new Cube(),
             box_2: new Cube(),
-            axis: new Axis_Arrows()
         }
-        this.shapes.box_2.arrays.texture_coord.forEach(
+        /*this.shapes.box_2.arrays.texture_coord.forEach(
             (v, i, l) => {
                 v[0] = v[0] * 2
                 v[1] = v[1] * 2
             }
-        )
+        )*/
         console.log(this.shapes.box_2.arrays.texture_coord)
 
         // TODO:  Create the materials required to texture both cubes with the correct images and settings.
@@ -38,31 +37,20 @@ export class Assignment4 extends Scene {
             phong: new Material(new Textured_Phong(), {
                 color: hex_color("#ffffff"),
             }),
-            texture_1: new Material(new Texture_Rotate(), {
-                color: hex_color("#000000"),
-                ambient: 1, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/stars.png", "NEAREST")
-            }),
             texture_2: new Material(new Texture_Scroll_X(), {
                 color: hex_color("#000000"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
-                texture: new Texture("assets/earth.gif", "LINEAR_MIPMAP_LINEAR")
+                texture: new Texture("assets/rainbow.png", "NEAREST")
             }),
         }
 
-        this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
-        
-        this.box1_transform = Mat4.translation(-2,0,0);
-        this.box2_transform = Mat4.translation(2,0,0);
+        this.box2_transform = Mat4.translation(-4.25,0,0);
 
         this.rotate = false
     }
 
     make_control_panel() {
         // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
-        this.key_triggered_button("Cube rotation", ["c"], () => {
-            this.rotate = !this.rotate; 
-        });
     }
 
     display(context, program_state) {
@@ -87,14 +75,10 @@ export class Assignment4 extends Scene {
         // rotation - 20rpm = 20* 2 * pi deg/min
         // 40pi / 60sec = 2pi/3 per sec
 
-        let box1_angle = (2. / 3.) * Math.PI * dt;
-        this.box1_transform = this.rotate ? this.box1_transform.times(Mat4.rotation(box1_angle, 1, 0, 0)) : this.box1_transform;
-
         let box2_angle = (2. / 3.) * Math.PI * dt;
-        this.box2_transform = this.rotate ? this.box2_transform.times(Mat4.rotation(box2_angle, 0, 1, 0)) : this.box2_transform;
+        this.box2_transform = this.rotate ? this.box2_transform.times(Mat4.rotation(0, 0, 1, 0)) : this.box2_transform;
 
         // Cube 1
-        this.shapes.box_1.draw(context, program_state, this.box1_transform, this.materials.texture_1);
         this.shapes.box_2.draw(context, program_state, this.box2_transform, this.materials.texture_2);
     }
 }
@@ -109,22 +93,15 @@ class Texture_Scroll_X extends Textured_Phong {
             uniform float animation_time;
             
             void main(){
-                float dx = mod((2.0 * animation_time), 1.0);
-                float u = abs(mod(f_tex_coord.x - dx, 1.0) - 0.5);
-                float v = abs(mod(f_tex_coord.y, 1.0) - 0.5);
+                //float dx = mod((2.0 * animation_time), 1.0);
+                float dy = mod((2.0 * animation_time), 1.0);
+                float u = abs(mod(f_tex_coord.x, 1.0) - 0.5);
+                float v = abs(mod(f_tex_coord.y - dy, 1.0) - 0.5);
                 
-                vec2 translated_tex_coord = vec2(f_tex_coord.x - dx, f_tex_coord.y);
+                vec2 translated_tex_coord = vec2(f_tex_coord.x, f_tex_coord.y - dy);
                 vec4 tex_color;
 
-                if ( 
-                    (u > 0.25 && u < 0.35 && v < 0.35) ||
-                    (v > 0.25 && v < 0.35 && u < 0.35)
-                ) {
-                    tex_color = vec4(0, 0, 0, 1.0);
-                } else {                
-                    // Sample the texture image in the correct place:
-                    tex_color = texture2D( texture, translated_tex_coord);
-                }
+                tex_color = texture2D( texture, translated_tex_coord);
 
                 if( tex_color.w < .01 ) discard;
                                                                          // Compute an initial (ambient) color:
@@ -184,4 +161,3 @@ class Texture_Rotate extends Textured_Phong {
         } `;
     }
 }
-
