@@ -6,7 +6,7 @@ const {
 
 const {Cube, Axis_Arrows, Textured_Phong} = defs
 
-export class Assignment4 extends Scene {
+export class NyanCat extends Scene {
     /**
      *  **Base_scene** is a Scene that can be added to any display canvas.
      *  Setup the shapes, materials, camera, and lighting here.
@@ -44,7 +44,7 @@ export class Assignment4 extends Scene {
             }),
         }
 
-        this.box2_transform = Mat4.translation(-4.25,0,0);
+        this.box2_transform = Mat4.translation(-4.25,0,0).times(Mat4.scale(3.75,.6,1));
 
         this.rotate = false
     }
@@ -94,11 +94,13 @@ class Texture_Scroll_X extends Textured_Phong {
             
             void main(){
                 //float dx = mod((2.0 * animation_time), 1.0);
-                float dy = mod((2.0 * animation_time), 1.0);
+                float dy = mod((1.75 * animation_time), 1.0);
                 float u = abs(mod(f_tex_coord.x, 1.0) - 0.5);
                 float v = abs(mod(f_tex_coord.y - dy, 1.0) - 0.5);
                 
-                vec2 translated_tex_coord = vec2(f_tex_coord.x, f_tex_coord.y - dy);
+
+                vec2 translated_tex_coord = vec2(f_tex_coord.x, f_tex_coord.y + dy);
+
                 vec4 tex_color;
 
                 tex_color = texture2D( texture, translated_tex_coord);
