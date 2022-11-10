@@ -21,6 +21,7 @@ export class NyanCat extends Scene {
         this.shapes = {
             box_1: new Cube(),
             box_2: new Cube(),
+            pixel: new Cube(),
         }
         /*this.shapes.box_2.arrays.texture_coord.forEach(
             (v, i, l) => {
@@ -42,6 +43,9 @@ export class NyanCat extends Scene {
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/rainbow.png", "NEAREST")
             }),
+            pixel: new Material(new Textured_Phong(), {
+                color: hex_color("#ff0000"),
+            })
         }
 
         this.box2_transform = Mat4.translation(-4.25,0,0).times(Mat4.scale(3.75,.6,1));
@@ -74,6 +78,46 @@ export class NyanCat extends Scene {
         
         // rotation - 20rpm = 20* 2 * pi deg/min
         // 40pi / 60sec = 2pi/3 per sec
+        
+        /* Nyan Cat Model Start */
+        const colors = {
+            'blac': '#624F56',
+            'brow': '#FFEF82',
+            'grey': '#616160',
+            'whit': '#FDFDFD',
+            'pink': '#FF8BBF',
+            'purp': '#AA50FD',
+            'empt': '       ',
+        }
+        const { blac, whit, pink, grey, empt } = colors;
+        const cat_pixels = [
+            ['       ', '       ', '#624F56', '#624F56', '       ', '       ', '       ', '       ', '       ', '       ', '       ', '       ', '#624F56', '#624F56', '       ', '       '],
+            ['       ', '#624F56', '#616160', '#616160', '#624F56', '       ', '       ', '       ', '       ', '       ', '       ', '#624F56', '#616160', '#616160', '#624F56', '       '],
+            ['       ', '#624F56', '#616160', '#616160', '#616160', '#624F56', '       ', '       ', '       ', '       ', '#624F56', '#616160', '#616160', '#616160', '#624F56', '       '],
+            ['       ', '#624F56', '#616160', '#616160', '#616160', '#616160', '#624F56', '#624F56', '#624F56', '#624F56', '#616160', '#616160', '#616160', '#616160', '#624F56', '       '],
+            ['       ', '#624F56', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#624F56', '       '],
+            ['#624F56', '#616160', '#616160', '#616160', '#FDFDFD', '#624F56', '#616160', '#616160', '#616160', '#616160', '#616160', '#FDFDFD', '#624F56', '#616160', '#616160', '#624F56'],
+            ['#624F56', '#616160', '#616160', '#616160', '#624F56', '#624F56', '#616160', '#616160', '#616160', '#624F56', '#616160', '#624F56', '#624F56', '#616160', '#616160', '#624F56'],
+            ['#624F56', '#616160', '#FF8BBF', '#FF8BBF', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#FF8BBF', '#FF8BBF', '#624F56'],
+            ['#624F56', '#616160', '#FF8BBF', '#FF8BBF', '#616160', '#624F56', '#616160', '#616160', '#624F56', '#616160', '#616160', '#624F56', '#616160', '#FF8BBF', '#FF8BBF', '#624F56'],
+            ['       ', '#624F56', '#616160', '#616160', '#616160', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#616160', '#616160', '#624F56', '       '],
+            ['       ', '       ', '#624F56', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#616160', '#624F56', '       ', '       '],
+            ['       ', '       ', '       ', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '       ', '       ', '       '],
+        ];
+
+        let pixel_transform = model_transform
+            .times(Mat4.translation(-1, 0.6w, 1))
+            .times(Mat4.scale(0.05, 0.05, 0.05))
+        for (let i = 0; i < cat_pixels.length; i++) {
+            for (let j = 0; j < cat_pixels[i].length; j++) {
+                pixel_transform = pixel_transform.times(Mat4.translation(2, 0, 0));
+                if (cat_pixels[i][j] != '       ') {
+                    this.shapes.pixel.draw(context, program_state, pixel_transform, this.materials.pixel.override({color: hex_color(cat_pixels[i][j])}));
+                }
+            }
+            pixel_transform = pixel_transform.times(Mat4.translation(-32, -2, 0));
+        }
+        /* Nyan Cat Model End */
 
         let box2_angle = (2. / 3.) * Math.PI * dt;
         this.box2_transform = this.rotate ? this.box2_transform.times(Mat4.rotation(0, 0, 1, 0)) : this.box2_transform;
@@ -82,7 +126,6 @@ export class NyanCat extends Scene {
         this.shapes.box_2.draw(context, program_state, this.box2_transform, this.materials.texture_2);
     }
 }
-
 
 class Texture_Scroll_X extends Textured_Phong {
     // TODO:  Modify the shader below (right now it's just the same fragment shader as Textured_Phong) for requirement #6.
