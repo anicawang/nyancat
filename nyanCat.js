@@ -106,7 +106,7 @@ export class NyanCat extends Scene {
         ];
 
         let pixel_transform = model_transform
-            .times(Mat4.translation(-1, 0.6w, 1))
+            .times(Mat4.translation(-1, 0.6, 1))
             .times(Mat4.scale(0.05, 0.05, 0.05))
         for (let i = 0; i < cat_pixels.length; i++) {
             for (let j = 0; j < cat_pixels[i].length; j++) {
@@ -117,6 +117,7 @@ export class NyanCat extends Scene {
             }
             pixel_transform = pixel_transform.times(Mat4.translation(-32, -2, 0));
         }
+
         /* Nyan Cat Model End */
 
         let box2_angle = (2. / 3.) * Math.PI * dt;
