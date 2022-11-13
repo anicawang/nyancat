@@ -1,4 +1,6 @@
-# Assignment #4
+# Nyan Cat Game
+
+<img align="center" src="./nyancat.png" height="200px"></img>
 
 ## Due: Nov 20, 2022 at 11:59pm
 

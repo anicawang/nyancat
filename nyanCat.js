@@ -51,6 +51,22 @@ export class NyanCat extends Scene {
         this.box2_transform = Mat4.translation(-4.25,0,0).times(Mat4.scale(3.75,.6,1));
 
         this.rotate = false
+
+        /* Starfield instantiation */
+        // screen is roughly 6 x 3.5
+        this.stars = [];
+        for (let i = 0; i < 25; i++) {
+            this.stars.push({
+                'x': 12 * (Math.random() - 0.5),
+                'y': 7 * (Math.random() - 0.5),
+                'z': -5 * (Math.random()),
+                'dx': -0.1 * (Math.random() + 0.3),
+                'dy': 0,
+                'dz': 0,
+                'scale': 0.1,
+                'color': '#ffff99',
+            });
+        }
     }
 
     make_control_panel() {
@@ -79,6 +95,7 @@ export class NyanCat extends Scene {
         // rotation - 20rpm = 20* 2 * pi deg/min
         // 40pi / 60sec = 2pi/3 per sec
         
+        // TODO: Make some of my code less ugly lmao
         /* Nyan Cat Model Start */
         const colors = {
             'blac': '#624F56',
@@ -119,6 +136,19 @@ export class NyanCat extends Scene {
         }
 
         /* Nyan Cat Model End */
+
+        /* Starfield */
+        for (let i = 0; i < this.stars.length; i++) {
+            const {x, y, z, dx, dy, dz, scale, color} = this.stars[i];
+            const star_transform = model_transform
+                .times(Mat4.translation(x, y, z))
+                .times(Mat4.scale(scale, scale, scale));
+            this.shapes.pixel.draw(context, program_state, star_transform, this.materials.pixel.override({color: hex_color(color)}));
+            this.stars[i].x += (x + dx >= -6) ? dx : dx + 12;
+            this.stars[i].y += dy;
+            this.stars[i].z += dz;
+        }
+        /* Starfield End */
 
         let box2_angle = (2. / 3.) * Math.PI * dt;
         this.box2_transform = this.rotate ? this.box2_transform.times(Mat4.rotation(0, 0, 1, 0)) : this.box2_transform;
