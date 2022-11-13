@@ -67,11 +67,23 @@ export class NyanCat extends Scene {
                 'color': '#ffff99',
             });
         }
+
+        /* Nyan Cat Properties */
+        this.cat = {
+            'x': 0, 'y': 0, 'dx': 0, 'dy': 0,
+        }
     }
+
+
 
     make_control_panel() {
         // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
+        this.key_triggered_button('Up', ['Control', 'w'], () => { this.cat.dy = 0.025 });
+        this.key_triggered_button('Down', ['Control', 's'], () => { this.cat.dy = -0.025 });
+        this.new_line();
     }
+
+
 
     display(context, program_state) {
         if (!context.scratchpad.controls) {
@@ -122,8 +134,11 @@ export class NyanCat extends Scene {
             ['       ', '       ', '       ', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '       ', '       ', '       '],
         ];
 
+        this.cat.y += this.cat.dy;
+        this.cat.dy /= 1.05;
+
         let pixel_transform = model_transform
-            .times(Mat4.translation(-1, 0.6, 1))
+            .times(Mat4.translation(-1, 0.6 + this.cat.y, 1))
             .times(Mat4.scale(0.05, 0.05, 0.05))
         for (let i = 0; i < cat_pixels.length; i++) {
             for (let j = 0; j < cat_pixels[i].length; j++) {
@@ -154,7 +169,7 @@ export class NyanCat extends Scene {
         this.box2_transform = this.rotate ? this.box2_transform.times(Mat4.rotation(0, 0, 1, 0)) : this.box2_transform;
 
         // Cube 1
-        this.shapes.box_2.draw(context, program_state, this.box2_transform, this.materials.texture_2);
+        // this.shapes.box_2.draw(context, program_state, this.box2_transform, this.materials.texture_2);
     }
 }
 
