@@ -55,7 +55,7 @@ export class NyanCat extends Scene {
         /* Starfield instantiation */
         // screen is roughly 6 x 3.5
         this.stars = [];
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 50; i++) {
             this.stars.push({
                 'x': 12 * (Math.random() - 0.5),
                 'y': 7 * (Math.random() - 0.5),
@@ -70,7 +70,7 @@ export class NyanCat extends Scene {
 
         /* Nyan Cat Properties */
         this.cat = {
-            'x': 0, 'y': 0, 'dx': 0, 'dy': 0,
+            'x': 0, 'y': 0, 'dx': 0, 'dy': 0, 'ddy': 0,
         }
     }
 
@@ -78,8 +78,10 @@ export class NyanCat extends Scene {
 
     make_control_panel() {
         // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
-        this.key_triggered_button('Up', ['Control', 'w'], () => { this.cat.dy = 0.025 });
-        this.key_triggered_button('Down', ['Control', 's'], () => { this.cat.dy = -0.025 });
+        this.key_triggered_button('Up', ['Control', 'w'], () => { this.cat.dy += 0.025 });
+        this.key_triggered_button('Left', ['Control', 'a'], () => { this.cat.dx -= 0.025 });
+        this.key_triggered_button('Down', ['Control', 's'], () => { this.cat.dy -= 0.025 });
+        this.key_triggered_button('Right', ['Control', 'd'], () => { this.cat.dx += 0.025 });
         this.new_line();
     }
 
@@ -134,11 +136,18 @@ export class NyanCat extends Scene {
             ['       ', '       ', '       ', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '#624F56', '       ', '       ', '       '],
         ];
 
+        // this.cat.dy = this.cat.ddy * 1;
         this.cat.y += this.cat.dy;
-        this.cat.dy /= 1.05;
+        this.cat.x += this.cat.dx;
+
+        this.cat.dx = Math.min(this.cat.dx, 0.075);
+        this.cat.dy = Math.min(this.cat.dy, 0.075);
+
+        this.cat.dy /= 1.01;
+        this.cat.dx /= 1.01;
 
         let pixel_transform = model_transform
-            .times(Mat4.translation(-1, 0.6 + this.cat.y, 1))
+            .times(Mat4.translation(-1 + this.cat.x, 0.6 + this.cat.y, 1))
             .times(Mat4.scale(0.05, 0.05, 0.05))
         for (let i = 0; i < cat_pixels.length; i++) {
             for (let j = 0; j < cat_pixels[i].length; j++) {
@@ -157,7 +166,7 @@ export class NyanCat extends Scene {
             const {x, y, z, dx, dy, dz, scale, color} = this.stars[i];
             const star_transform = model_transform
                 .times(Mat4.translation(x, y, z))
-                .times(Mat4.scale(scale, scale, scale));
+                .times(Mat4.scale(scale, 0.2 * scale, 0.2 * scale));
             this.shapes.pixel.draw(context, program_state, star_transform, this.materials.pixel.override({color: hex_color(color)}));
             this.stars[i].x += (x + dx >= -6) ? dx : dx + 12;
             this.stars[i].y += dy;
