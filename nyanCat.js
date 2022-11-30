@@ -20,16 +20,16 @@ export class NyanCat extends Scene {
         //        a cube instance's texture_coords after it is already created.
         this.shapes = {
             box_1: new Cube(),
-            box_2: new Cube(),
+            rainbow: new Cube(),
             pixel: new Cube(),
         }
-        /*this.shapes.box_2.arrays.texture_coord.forEach(
+        /*this.shapes.rainbow.arrays.texture_coord.forEach(
             (v, i, l) => {
                 v[0] = v[0] * 2
                 v[1] = v[1] * 2
             }
         )*/
-        console.log(this.shapes.box_2.arrays.texture_coord)
+        console.log(this.shapes.rainbow.arrays.texture_coord)
 
         // TODO:  Create the materials required to texture both cubes with the correct images and settings.
         //        Make each Material from the correct shader.  Phong_Shader will work initially, but when
@@ -48,7 +48,7 @@ export class NyanCat extends Scene {
             })
         }
 
-        this.box2_transform = Mat4.translation(-4.25,0,0).times(Mat4.scale(3.75,.6,1));
+        this.rainbow_transform = Mat4.translation(-4.25,0,0).times(Mat4.scale(3.75,.6,1));
 
         this.rotate = false
 
@@ -72,6 +72,8 @@ export class NyanCat extends Scene {
         this.cat = {
             'x': 0, 'y': 0, 'dx': 0, 'dy': 0, 'ddy': 0,
         }
+        this.cat_x = 0;
+        this.cat_y = 0;
     }
 
 
@@ -83,6 +85,18 @@ export class NyanCat extends Scene {
         this.key_triggered_button('Down', ['Control', 's'], () => { this.cat.dy -= 0.025 });
         this.key_triggered_button('Right', ['Control', 'd'], () => { this.cat.dx += 0.025 });
         this.new_line();
+        this.key_triggered_button("Forwards", ["i"], () => {
+            this.cat_y += 0.1; 
+        });
+        this.key_triggered_button("Left", ["j"], () => {
+            this.cat_x -= 0.1;
+        });
+        this.key_triggered_button("Right", ["l"], () => {
+            this.cat_x += 0.1;
+        });
+        this.key_triggered_button("Backwards", ["k"], () => {
+            this.cat_y -= 0.1;
+        });
     }
 
 
@@ -148,7 +162,10 @@ export class NyanCat extends Scene {
 
         let pixel_transform = model_transform
             .times(Mat4.translation(-1 + this.cat.x, 0.6 + this.cat.y, 1))
+            // .times(Mat4.translation(this.cat_x, this.cat_y, 0))
+            // .times(Mat4.translation(-1, 0.6, 1))
             .times(Mat4.scale(0.05, 0.05, 0.05))
+            
         for (let i = 0; i < cat_pixels.length; i++) {
             for (let j = 0; j < cat_pixels[i].length; j++) {
                 pixel_transform = pixel_transform.times(Mat4.translation(2, 0, 0));
@@ -174,11 +191,13 @@ export class NyanCat extends Scene {
         }
         /* Starfield End */
 
-        let box2_angle = (2. / 3.) * Math.PI * dt;
-        this.box2_transform = this.rotate ? this.box2_transform.times(Mat4.rotation(0, 0, 1, 0)) : this.box2_transform;
+        let rainbow_angle = (2. / 3.) * Math.PI * dt;
+        this.rainbow_transform = this.rotate ? this.rainbow_transform.times(Mat4.rotation(0, 0, 1, 0)) : this.rainbow_transform;
 
         // Cube 1
         // this.shapes.box_2.draw(context, program_state, this.box2_transform, this.materials.texture_2);
+        // Rainbow
+        // this.shapes.rainbow.draw(context, program_state, this.rainbow_transform, this.materials.texture_2);
     }
 }
 
