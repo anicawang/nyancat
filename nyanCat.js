@@ -153,6 +153,8 @@ export class NyanCat extends Scene {
 
         this.rainbow_toggle = true;
         this.music_toggle = false;
+
+        this.alive = true;
     }
 
 
@@ -186,8 +188,15 @@ export class NyanCat extends Scene {
                 audio.currentTime = 0;
             }
         });
+        this.key_triggered_button('Kill', ['n'], () => {
+            this.alive = false;
+        })
         this.key_triggered_button('Toggle Rainbow Effect', ['u'], () => { this.rainbow_toggle = !this.rainbow_toggle; });
         this.new_line();
+    }
+
+    kill() {
+
     }
 
 
@@ -246,14 +255,18 @@ export class NyanCat extends Scene {
         this.cat.x += this.cat.dx;
 
         // Bound x and y within frame
-        const BOUNCE_MULTIPLIER = 0.5;
-        if (Math.abs(this.cat.x) > 5) {
-            this.cat.x = Math.sign(this.cat.x) * 5;
-            this.cat.dx = -this.cat.dx * BOUNCE_MULTIPLIER;
-        }
-        if (Math.abs(this.cat.y) > 2.5) {
-            this.cat.y = Math.sign(this.cat.y) * 2.5;
-            this.cat.dy = -this.cat.dy * BOUNCE_MULTIPLIER;
+        if (this.alive) {
+            const BOUNCE_MULTIPLIER = 0.5;
+            if (Math.abs(this.cat.x) > 5) {
+                this.cat.x = Math.sign(this.cat.x) * 5;
+                this.cat.dx = -this.cat.dx * BOUNCE_MULTIPLIER;
+            }
+            if (Math.abs(this.cat.y) > 2.5) {
+                this.cat.y = Math.sign(this.cat.y) * 2.5;
+                this.cat.dy = -this.cat.dy * BOUNCE_MULTIPLIER;
+            }
+        } else {
+            this.cat.dx = -0.1;
         }
         // this.cat.y = Math.max(-2.5, this.cat.y);
 
@@ -265,12 +278,17 @@ export class NyanCat extends Scene {
 
         this.cat.position_queue.push(this.cat.y);
         this.cat.position_queue.shift();
-        
-
 
 
         let pixel_transform = model_transform
             .times(Mat4.translation(this.cat.x, this.cat.y, 1));
+
+        if (!this.alive) {
+            pixel_transform = pixel_transform
+                .times(Mat4.rotation(Math.cos(t - Math.PI) * Math.PI / 2, 0, 0, 1))
+                .times(Mat4.rotation(Math.cos(t - Math.PI) * Math.PI / 2, 0, 1, 0))
+                .times(Mat4.rotation(Math.cos(t - Math.PI) * Math.PI / 2, 0, 0, 1));
+        }
             
             // .times(Mat4.translation(this.cat_x, this.cat_y, 0))
             // .times(Mat4.translation(-1, 0.6, 1))
