@@ -116,6 +116,8 @@ export class NyanCat extends Scene {
         this.rainbow_toggle = true;
         this.music_toggle = false;
 
+        this.leg_move = 0;
+
     }
 
     reset() {
@@ -329,25 +331,34 @@ export class NyanCat extends Scene {
 
         this.shapes.cat_ear2.draw(context, program_state, cat_ear2_transform, this.materials.cat_ear);
 
-        
+
+        this.leg_move = -t;
+        if (Math.floor(t/3) % 2 == 0) {
+            this.leg_move  *= -1;
+        }
+
         const cat_leg1_transform = pixel_transform
             .times(Mat4.translation(0.5, -0.7, 0.1))
-            .times(Mat4.scale(0.2, 0.2, 0.2));
+            .times(Mat4.scale(0.2, 0.2, 0.2))
+            .times(Mat4.rotation(this.leg_move, 0, 0, 1));
         this.shapes.cat_leg1.draw(context, program_state, cat_leg1_transform, this.materials.cat_ear);
         
         const cat_leg2_transform = pixel_transform
             .times(Mat4.translation(0.5, -0.7, -0.1))
-            .times(Mat4.scale(0.2, 0.2, 0.2));
+            .times(Mat4.scale(0.2, 0.2, 0.2))
+            .times(Mat4.rotation(this.leg_move, 0, 0, 1));
         this.shapes.cat_leg2.draw(context, program_state, cat_leg2_transform, this.materials.cat_ear);
 
         const cat_leg3_transform = pixel_transform
             .times(Mat4.translation(-0.5, -0.7, 0.1))
-            .times(Mat4.scale(0.2, 0.2, 0.2));
+            .times(Mat4.scale(0.2, 0.2, 0.2))
+            .times(Mat4.rotation(this.leg_move, 0, 0, 1));
         this.shapes.cat_leg3.draw(context, program_state, cat_leg3_transform, this.materials.cat_ear);
         
         const cat_leg4_transform = pixel_transform
             .times(Mat4.translation(-0.5, -0.7, -0.1))
-            .times(Mat4.scale(0.2, 0.2, 0.2));
+            .times(Mat4.scale(0.2, 0.2, 0.2))
+            .times(Mat4.rotation(this.leg_move, 0, 0, 1));
         this.shapes.cat_leg4.draw(context, program_state, cat_leg4_transform, this.materials.cat_ear);
         
         // for (let i = 0; i < cat_pixels.length; i++) {
