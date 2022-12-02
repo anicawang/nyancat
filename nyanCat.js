@@ -108,7 +108,7 @@ export class NyanCat extends Scene {
 
         /* Nyan Cat Properties */
         this.cat = {
-            'x': 0, 'y': 0, 'dx': 0, 'dy': 0, 'ddy': 0,
+            'x': 0, 'y': 0, 'dx': 0, 'dy': 0, 'ddy': 0, 'alive': true
         }
 
         this.bows = []
@@ -348,7 +348,7 @@ export class NyanCat extends Scene {
             this.asteroids[i].x += dx;
             this.asteroids[i].y += dy;
             this.asteroids[i].z += dz;
-            if (this.asteroids[i].x < -6) {
+            if (this.asteroids[i].x < -8.5) {
                 this.asteroids.splice(i, 1);
                 i--;
                 this.asteroids.push({
@@ -361,6 +361,11 @@ export class NyanCat extends Scene {
                     'scale': 0.25,
                     'color': '#ffff99',
                 });
+                continue;
+            }
+            if (this.asteroids[i].x <= this.cat.x && this.asteroids[i].x >= this.cat.x-2 &&
+            this.asteroids[i].y <= this.cat.y && this.asteroids[i].y >= this.cat.y-2) {
+                this.cat.alive = false;
             }
         }
 
