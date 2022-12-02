@@ -68,8 +68,19 @@ export class NyanCat extends Scene {
         this.cat = {
             'x': 0, 'y': 0, 'dx': 0, 'dy': 0, 'ddy': 0,
         }
-        this.cat_x = 0;
-        this.cat_y = 0;
+
+        this.bows = []
+        let rain_x = 0;
+        for (let i = 0; i < 50; i++) {
+            this.bows.push({
+                'x': -.9 - rain_x,
+                'y': 0,
+                'dx': 0,
+                'dy': 0
+            })
+            rain_x += .5;
+        }
+
         this.rainbowX = 0;
         this.rainbowY = 0;
         this.rainbowDX = 0;
@@ -80,23 +91,11 @@ export class NyanCat extends Scene {
 
     make_control_panel() {
         // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
-        this.key_triggered_button('Up', ['Control', 'w'], () => { this.cat.dy += 0.025, this.rainbowDY += .025 });
-        this.key_triggered_button('Left', ['Control', 'a'], () => { this.cat.dx -= 0.025, this.rainbowDX -= .025 });
-        this.key_triggered_button('Down', ['Control', 's'], () => { this.cat.dy -= 0.025, this.rainbowDY -= .025 });
-        this.key_triggered_button('Right', ['Control', 'd'], () => { this.cat.dx += 0.025, this.rainbowDX += .025 });
+        this.key_triggered_button('Up', ["i"], () => { this.cat.dy += 0.025, this.rainbowDY += .025 });
+        this.key_triggered_button('Left', ["j"], () => { this.cat.dx -= 0.025, this.rainbowDX -= .025 });
+        this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025, this.rainbowDY -= .025 });
+        this.key_triggered_button('Right', ["l"], () => { this.cat.dx += 0.025, this.rainbowDX += .025 });
         this.new_line();
-        this.key_triggered_button("Forwards", ["i"], () => {
-            this.cat_y += 0.1; 
-        });
-        this.key_triggered_button("Left", ["j"], () => {
-            this.cat_x -= 0.1;
-        });
-        this.key_triggered_button("Right", ["l"], () => {
-            this.cat_x += 0.1;
-        });
-        this.key_triggered_button("Backwards", ["k"], () => {
-            this.cat_y -= 0.1;
-        });
     }
 
 
@@ -114,7 +113,7 @@ export class NyanCat extends Scene {
         const light_position = vec4(10, 10, 10, 1);
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
 
-        let t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
+        let t = program_state.animation_time / 150, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.identity();
 
         // TODO:  Draw the required boxes. Also update their stored matrices.
@@ -203,11 +202,62 @@ export class NyanCat extends Scene {
         this.rainbowDX /= 1.01;
 
 
+        for (let i = 0; i < this.bows.length; i++) {
+            let{x, y, dx, dy} = this.bows[i];
+            if (i % 2 == 0) {
+                y = .025;
+            }
+            else {
+                y = -.025;
+            }
+            if (Math.floor(t) % 2 == 0) {
+                y *= -1;
+            }
+
+            const rainbow_transform = Mat4.translation(x + this.rainbowX, y + this.rainbowY, 0).times(Mat4.scale(.25, .6, .3));
+            this.shapes.rainbow.draw(context, program_state, rainbow_transform, this.materials.texture_2);
+            //this.bows[i].x -= .01
+        }
+
+
+        /*let rain_x = 0;
+        let rain_y = 0;
+        let rain_dy = 0;
+        for (let i = 0; i < 20; i++) {
+            if (i % 2 == 0) {
+                rain_y = .025;
+                rain_dy = -.01;
+            }
+            else {
+                rain_y = -.025;
+                rain_dy = .01;
+            }
+
+            if (Math.floor(t) % 2 == 0) {
+                rain_y *= -1;
+            }
+
+            const rainbow_transform = Mat4.translation(-.9 - rain_x, rain_y, 0).times(Mat4.scale(.25, .6, .3));
+            this.shapes.rainbow.draw(context, program_state, rainbow_transform, this.materials.texture_2);
+            rain_x += .5;
+        }*/
+
+
+        /*this.rainbowY += this.rainbowDY;
+        this.rainbowX += this.rainbowDX;
+
+        this.rainbowDX = Math.min(this.rainbowDX, 0.075);
+        this.rainbowDY = Math.min(this.rainbowDY, 0.075);
+
+        this.rainbowDY /= 1.01;
+        this.rainbowDX /= 1.01;
+
+
         this.rainbow_transform = model_transform.times(Mat4.translation(-10.5 + this.rainbowX, 0 + this.rainbowY,0)
-            .times(Mat4.scale(10,.6,.3)));
+            .times(Mat4.scale(10,.6,.3))); */
 
 
-        this.shapes.rainbow.draw(context, program_state, this.rainbow_transform, this.materials.texture_2);
+        //this.shapes.rainbow.draw(context, program_state, this.rainbow_transform, this.materials.texture_2);
     }
 }
 
@@ -220,67 +270,17 @@ class Texture_Scroll_X extends Textured_Phong {
             uniform float animation_time;
             
             void main(){
-                //float dx = mod((2.0 * animation_time), 1.0);
+                float dx = mod((2.0 * animation_time), 1.0);
                 float dy = mod((1.75 * animation_time), 1.0);
-                float u = abs(mod(f_tex_coord.x, 1.0) - 0.5);
+                float u = abs(mod(f_tex_coord.x - dx, 1.0) - 0.5);
                 float v = abs(mod(f_tex_coord.y - dy, 1.0) - 0.5);
                 
 
-                vec2 translated_tex_coord = vec2(f_tex_coord.x, f_tex_coord.y + dy);
+                vec2 translated_tex_coord = vec2(f_tex_coord.x + dx, f_tex_coord.y);
 
                 vec4 tex_color;
 
                 tex_color = texture2D( texture, translated_tex_coord);
-
-                if( tex_color.w < .01 ) discard;
-                                                                         // Compute an initial (ambient) color:
-                gl_FragColor = vec4( ( tex_color.xyz + shape_color.xyz ) * ambient, shape_color.w * tex_color.w ); 
-                                                                         // Compute the final color with contributions from lights:
-                gl_FragColor.xyz += phong_model_lights( normalize( N ), vertex_worldspace );
-        } `;
-    }
-}
-
-// 15 rpm = (30 * pi) / 60s) = (pi / 4)
-class Texture_Rotate extends Textured_Phong {
-    // TODO:  Modify the shader below (right now it's just the same fragment shader as Textured_Phong) for requirement #7.
-    fragment_glsl_code() {
-        return this.shared_glsl_code() + `
-            varying vec2 f_tex_coord;
-            uniform sampler2D texture;
-            uniform float animation_time;
-            void main(){
-                // Sample the texture image in the correct place:
-                float pi = 3.14159;
-                float angle = mod(pi * animation_time / 2.0, 2.0 * pi);
-
-                float u = f_tex_coord.x - 0.5;
-                float v = f_tex_coord.y - 0.5;
-                
-                float s = sin(angle);
-                float c = cos(angle);
-
-                mat2 m = mat2(
-                    c, -s,
-                    s, c
-                );
-                
-                vec4 tex_color;
-                vec2 new_coord = m * vec2(u, v);
-                vec2 translated_tex_coord = vec2(new_coord.x + 0.5, new_coord.y + 0.5);
-
-                u = abs(new_coord.x);
-                v = abs(new_coord.y);
-
-                if ( 
-                    (u > 0.25 && u < 0.35 && v < 0.35) ||
-                    (v > 0.25 && v < 0.35 && u < 0.35)
-                ) {
-                    tex_color = vec4(0, 0, 0, 1.0);
-                } else {                
-                    // Sample the texture image in the correct place:
-                    tex_color = texture2D( texture, translated_tex_coord);
-                }
 
                 if( tex_color.w < .01 ) discard;
                                                                          // Compute an initial (ambient) color:
