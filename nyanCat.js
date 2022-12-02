@@ -453,7 +453,7 @@ export class NyanCat extends Scene {
 
         const background_transform = model_transform
             .times(Mat4.translation(0, 0, -10))
-            .times(Mat4.scale(20, 10, 1));
+            .times(Mat4.scale(40, 40, 1));
         this.shapes.box_1.draw(context, program_state, background_transform, this.materials.texture_1.override({color: background_color}));
 
 
