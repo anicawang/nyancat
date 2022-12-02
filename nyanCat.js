@@ -71,7 +71,7 @@ export class NyanCat extends Scene {
                 'dx': -0.075 * (Math.random() + 0.3),
                 'dy': 0,
                 'dz': 0,
-                'scale': 0.1,
+                'scale': 0.3 * (Math.random()),
                 'color': '#ffff99',
             });
         }
@@ -126,10 +126,10 @@ export class NyanCat extends Scene {
         audio.src = "assets/cat_audio.mp3";
         
         // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
-        this.key_triggered_button('Up', ["i"], () => { this.cat.dy += 0.025, this.rainbowDY += .025 });
-        this.key_triggered_button('Left', ["j"], () => { this.cat.dx -= 0.025, this.rainbowDX -= .025 });
-        this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025, this.rainbowDY -= .025 });
-        this.key_triggered_button('Right', ["l"], () => { this.cat.dx += 0.025, this.rainbowDX += .025 });
+        this.key_triggered_button('Up', ["i"], () => { this.cat.dy += 0.025 });
+        this.key_triggered_button('Left', ["j"], () => { this.cat.dx -= 0.025 });
+        this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025 });
+        this.key_triggered_button('Right', ["l"], () => { this.cat.dx += 0.025 });
         this.key_triggered_button('Music', ["m"], () => {
             audio.play();
         });
@@ -197,9 +197,14 @@ export class NyanCat extends Scene {
         this.cat.x += this.cat.dx;
 
         // Bound x and y within frame
+        const BOUNCE_MULTIPLIER = 0.5;
         if (Math.abs(this.cat.x) > 5) {
-            // this.cat.x = Math.sign(this.cat.x) * 5;
-            // this.cat.dx = -this.cat.dx;
+            this.cat.x = Math.sign(this.cat.x) * 5;
+            this.cat.dx = -this.cat.dx * BOUNCE_MULTIPLIER;
+        }
+        if (Math.abs(this.cat.y) > 2.5) {
+            this.cat.y = Math.sign(this.cat.y) * 2.5;
+            this.cat.dy = -this.cat.dy * BOUNCE_MULTIPLIER;
         }
         // this.cat.y = Math.max(-2.5, this.cat.y);
 
@@ -234,7 +239,7 @@ export class NyanCat extends Scene {
             const {x, y, z, dx, dy, dz, scale, color} = this.stars[i];
             const star_transform = model_transform
                 .times(Mat4.translation(x, y, z))
-                .times(Mat4.scale(scale, 0.2 * scale, 0.2 * scale));
+                .times(Mat4.scale(scale, 0.1 * scale, 0.1 * scale));
             this.shapes.pixel.draw(context, program_state, star_transform, this.materials.pixel.override({color: hex_color(color)}));
             this.stars[i].x += (x + dx >= -6) ? dx : dx + 12;
             this.stars[i].y += dy;
@@ -261,17 +266,6 @@ export class NyanCat extends Scene {
         /* Asteroids End */
 
         // Rainbow
-
-        this.rainbowY += this.rainbowDY;
-        this.rainbowX += this.rainbowDX;
-
-        this.rainbowDX = Math.min(this.rainbowDX, 0.075);
-        this.rainbowDY = Math.min(this.rainbowDY, 0.075);
-
-        this.rainbowDY /= 1.01;
-        this.rainbowDX /= 1.01;
-
-
         for (let i = 0; i < this.bows.length; i++) {
             let{x, y, dx, dy} = this.bows[i];
             if (i % 2 == 0) {
@@ -284,7 +278,7 @@ export class NyanCat extends Scene {
                 y *= -1;
             }
 
-            const rainbow_transform = Mat4.translation(x + this.rainbowX, y + this.rainbowY, 0).times(Mat4.scale(.25, .6, .3));
+            const rainbow_transform = Mat4.translation(x + this.cat.x, y + this.cat.y, 0).times(Mat4.scale(.25, .6, .3));
             this.shapes.rainbow.draw(context, program_state, rainbow_transform, this.materials.texture_2);
             this.bows[i].x += (x + dx >= -20) ? dx : dx + 20;
         }
