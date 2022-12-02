@@ -448,10 +448,13 @@ export class NyanCat extends Scene {
         }
 
         /* Background */
+        const magnitude = (Math.cos(t * 0.1) + 0.5) * 0.5;
+        const background_color = vec4(24/255 * magnitude, 74/255 * magnitude, 122/255 * magnitude, 1.0)
+
         const background_transform = model_transform
             .times(Mat4.translation(0, 0, -10))
             .times(Mat4.scale(20, 10, 1));
-        this.shapes.box_1.draw(context, program_state, background_transform, this.materials.texture_1);
+        this.shapes.box_1.draw(context, program_state, background_transform, this.materials.texture_1.override({color: background_color}));
 
 
         /*let rain_x = 0;
