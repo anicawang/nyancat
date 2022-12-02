@@ -49,7 +49,7 @@ export class NyanCat extends Scene {
             asteroid: new Material(new defs.Phong_Shader(),
                 {diffusivity: 1, color: hex_color("#808080")}),
             texture_1: new Material(new defs.Phong_Shader(), {
-                color: hex_color("#184a7a"),
+                color: vec4(24/255, 74/255, 122/255, 1.0),//# hex_color("#184a7a"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
             }),
             texture_2: new Material(new Texture_Scroll_X(), {
@@ -97,7 +97,7 @@ export class NyanCat extends Scene {
         this.asteroids = [];
         for (let i = 0; i < 4; i++) {
             this.asteroids.push({
-                'x': 12 * (Math.random() - 0.5),
+                'x': 12,
                 'y': 7 * (Math.random() - 0.5),
                 'z': -5 * (Math.random()),
                 'dx': -0.02 * (Math.random() + 2),
@@ -150,6 +150,23 @@ export class NyanCat extends Scene {
                 'dy': 0
             })
             rain_x += .1;
+        }
+
+        while (this.asteroids.length > 0) {
+            this.asteroids.pop();
+        }
+
+        for (let i = 0; i < 4; i++) {
+            this.asteroids.push({
+                'x': 12,
+                'y': 7 * (Math.random() - 0.5),
+                'z': -5 * (Math.random()),
+                'dx': -0.02 * (Math.random() + 2),
+                'dy': 0,
+                'dz': 0,
+                'scale': 0.25,
+                'color': '#ffff99',
+            });
         }
 
         this.cat.position_queue = Array(100).fill(0);
@@ -388,8 +405,8 @@ export class NyanCat extends Scene {
                 });
                 continue;
             }
-            if (this.asteroids[i].x <= this.cat.x + 0.8 && this.asteroids[i].x >= this.cat.x - 1 &&
-            this.asteroids[i].y <= this.cat.y + 0.8 && this.asteroids[i].y >= this.cat.y - 0.7) {
+            if (this.asteroids[i].x <= this.cat.x +.5 && this.asteroids[i].x >= this.cat.x - .8 &&
+            this.asteroids[i].y <= this.cat.y + .7 && this.asteroids[i].y >= this.cat.y - 0.7) {
                 this.alive = false;
             }
         }
