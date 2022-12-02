@@ -388,9 +388,9 @@ export class NyanCat extends Scene {
                 });
                 continue;
             }
-            if (this.asteroids[i].x <= this.cat.x && this.asteroids[i].x >= this.cat.x-2 &&
-            this.asteroids[i].y <= this.cat.y && this.asteroids[i].y >= this.cat.y-2) {
-                this.cat.alive = false;
+            if (this.asteroids[i].x <= this.cat.x + 1 && this.asteroids[i].x >= this.cat.x - 1 &&
+            this.asteroids[i].y <= this.cat.y + 1 && this.asteroids[i].y >= this.cat.y - 0.7) {
+                this.alive = false;
             }
         }
 
