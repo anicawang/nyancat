@@ -111,6 +111,8 @@ export class NyanCat extends Scene {
             rain_x += .5;
         }
 
+        this.cat.position_queue = Array(50).fill(0);
+
         this.rainbowX = 0;
         this.rainbowY = 0;
         this.rainbowDX = 0;
@@ -214,6 +216,10 @@ export class NyanCat extends Scene {
         this.cat.dy /= 1.01;
         this.cat.dx /= 1.01;
 
+        this.cat.position_queue.push(this.cat.y);
+        this.cat.position_queue.shift();
+        
+
 
 
         let pixel_transform = model_transform
@@ -269,16 +275,22 @@ export class NyanCat extends Scene {
         for (let i = 0; i < this.bows.length; i++) {
             let{x, y, dx, dy} = this.bows[i];
             if (i % 2 == 0) {
-                y = .025;
+                this.bows[i].y = .025;
             }
             else {
-                y = -.025;
+                this.bows[i].y = -.025;
             }
             if (Math.floor(t) % 2 == 0) {
-                y *= -1;
+                this.bows[i].y  *= -1;
             }
+        }
+        
 
-            const rainbow_transform = Mat4.translation(x + this.cat.x, y + this.cat.y, 0).times(Mat4.scale(.25, .6, .3));
+        this.bows.sort((a,b) => b.x - a.x);
+        for (let i = 0; i < this.bows.length; i++) {
+            let{x, y, dx, dy} = this.bows[i];
+            const trail = this.cat.position_queue[49 - i] * 2;
+            const rainbow_transform = Mat4.translation(x + this.cat.x, y + trail, 0.5).times(Mat4.scale(.25, .6, .1));
             this.shapes.rainbow.draw(context, program_state, rainbow_transform, this.materials.texture_2);
             this.bows[i].x += (x + dx >= -20) ? dx : dx + 20;
         }
