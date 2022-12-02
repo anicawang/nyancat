@@ -289,7 +289,7 @@ export class NyanCat extends Scene {
         this.bows.sort((a,b) => b.x - a.x);
         for (let i = 0; i < this.bows.length; i++) {
             let{x, y, dx, dy} = this.bows[i];
-            const trail = this.cat.position_queue[49 - i] * 2;
+            const trail = this.cat.position_queue[49 - i];
             const rainbow_transform = Mat4.translation(x + this.cat.x, y + trail, 0.5).times(Mat4.scale(.25, .6, .1));
             this.shapes.rainbow.draw(context, program_state, rainbow_transform, this.materials.texture_2);
             this.bows[i].x += (x + dx >= -20) ? dx : dx + 20;
