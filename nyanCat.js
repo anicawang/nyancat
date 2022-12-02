@@ -114,7 +114,20 @@ export class NyanCat extends Scene {
         }
 
             
+        // sets nyan cat's properties
+        this.reset();
 
+        this.rainbowX = 0;
+        this.rainbowY = 0;
+        this.rainbowDX = 0;
+        this.rainbowDY = 0;
+
+        this.rainbow_toggle = true;
+        this.music_toggle = false;
+
+    }
+
+    reset() {
         /* Nyan Cat Properties */
         this.cat = {
             'x': 0, 'y': 0, 'dx': 0, 'dy': 0, 'ddy': 0,
@@ -145,15 +158,6 @@ export class NyanCat extends Scene {
         }
 
         this.cat.position_queue = Array(100).fill(0);
-
-        this.rainbowX = 0;
-        this.rainbowY = 0;
-        this.rainbowDX = 0;
-        this.rainbowDY = 0;
-
-        this.rainbow_toggle = true;
-        this.music_toggle = false;
-
         this.alive = true;
     }
 
@@ -190,6 +194,9 @@ export class NyanCat extends Scene {
         });
         this.key_triggered_button('Kill', ['n'], () => {
             this.alive = false;
+        })
+        this.key_triggered_button('Reset', ['b'], () => {
+            this.reset();
         })
         this.key_triggered_button('Toggle Rainbow Effect', ['u'], () => { this.rainbow_toggle = !this.rainbow_toggle; });
         this.new_line();
