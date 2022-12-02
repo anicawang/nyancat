@@ -152,6 +152,7 @@ export class NyanCat extends Scene {
         this.rainbowDY = 0;
 
         this.rainbow_toggle = true;
+        this.music_toggle = false;
     }
 
 
@@ -176,12 +177,14 @@ export class NyanCat extends Scene {
         this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025 });
         this.key_triggered_button('Right', ["l"], () => { this.cat.dx += 0.025 });
 
-        this.key_triggered_button('Music', ["m"], () => {
-            audio.play();
-        });
-        this.key_triggered_button('No music', ["n"], () => {
-            audio.pause();
-            audio.currentTime = 0;
+        this.key_triggered_button('Toggle Music', ["m"], () => {
+            this.music_toggle = !this.music_toggle;
+            if (this.music_toggle) {
+                audio.play();
+            } else {
+                audio.pause();
+                audio.currentTime = 0;
+            }
         });
         this.key_triggered_button('Toggle Rainbow Effect', ['u'], () => { this.rainbow_toggle = !this.rainbow_toggle; });
         this.new_line();
