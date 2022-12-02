@@ -122,6 +122,9 @@ export class NyanCat extends Scene {
 
 
     make_control_panel() {
+
+        // sound file
+        
         var audio = document.createElement('audio');
         audio.src = "assets/cat_audio.mp3";
         
@@ -129,6 +132,8 @@ export class NyanCat extends Scene {
         this.key_triggered_button('Up', ["i"], () => { this.cat.dy += 0.025, this.rainbowDY += .025 });
         this.key_triggered_button('Left', ["j"], () => { this.cat.dx -= 0.025, this.rainbowDX -= .025 });
         this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025, this.rainbowDY -= .025 });
+        
+        // play and pause sound
         this.key_triggered_button('Right', ["l"], () => { this.cat.dx += 0.025, this.rainbowDX += .025 });
         this.key_triggered_button('Music', ["m"], () => {
             audio.play();
