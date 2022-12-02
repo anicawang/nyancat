@@ -132,14 +132,26 @@ export class NyanCat extends Scene {
             rain_x += .5;
         }
 
-        this.cat.position_queue = Array(50).fill(0);
+        this.new_bows = []
+        rain_x = 0;
+        for (let i = 0; i < 200; i++) {
+            this.new_bows.push({
+                'x': -.2 - rain_x,
+                'y': 0,
+                'dx': -.02,
+                'dy': 0
+            })
+            rain_x += .1;
+        }
+
+        this.cat.position_queue = Array(100).fill(0);
 
         this.rainbowX = 0;
         this.rainbowY = 0;
         this.rainbowDX = 0;
         this.rainbowDY = 0;
 
-        
+        this.rainbow_toggle = true;
     }
 
 
@@ -171,7 +183,7 @@ export class NyanCat extends Scene {
             audio.pause();
             audio.currentTime = 0;
         });
-        
+        this.key_triggered_button('Toggle Rainbow Effect', ['u'], () => { this.rainbow_toggle = !this.rainbow_toggle; });
         this.new_line();
     }
 
@@ -353,27 +365,37 @@ export class NyanCat extends Scene {
         /* Asteroids End */
 
         // Rainbow
-        for (let i = 0; i < this.bows.length; i++) {
-            let{x, y, dx, dy} = this.bows[i];
-            if (i % 2 == 0) {
-                this.bows[i].y = .025;
+        if (this.rainbow_toggle) {
+            for (let i = 0; i < this.bows.length; i++) {
+                let{x, y, dx, dy} = this.bows[i];
+                if (i % 2 == 0) {
+                    this.bows[i].y = .025;
+                }
+                else {
+                    this.bows[i].y = -.025;
+                }
+                if (Math.floor(t) % 2 == 0) {
+                    this.bows[i].y  *= -1;
+                }
             }
-            else {
-                this.bows[i].y = -.025;
+    
+            // this.bows.sort((a,b) => b.x - a.x);
+            for (let i = 0; i < this.bows.length; i++) {
+                let{x, y, dx, dy} = this.bows[i];
+                const trail = this.cat.y; // this.cat.position_queue[49 - i];
+                const rainbow_transform = Mat4.translation(x + this.cat.x, y + trail, 0.5).times(Mat4.scale(.25, .6, .1));
+                this.shapes.rainbow.draw(context, program_state, rainbow_transform, this.materials.texture_2);
+                this.bows[i].x += (x + dx >= -20) ? dx : dx + 20;
             }
-            if (Math.floor(t) % 2 == 0) {
-                this.bows[i].y  *= -1;
+        } else {
+            this.new_bows.sort((a,b) => b.x - a.x);
+            for (let i = 0; i < this.new_bows.length; i++) {
+                let{x, y, dx, dy} = this.new_bows[i];
+                const trail = this.cat.position_queue[99 - i];
+                const rainbow_transform = Mat4.translation(x + this.cat.x, y + trail, 0.5).times(Mat4.scale(.25, .6, .1));
+                this.shapes.rainbow.draw(context, program_state, rainbow_transform, this.materials.texture_2);
+                this.new_bows[i].x += (x + dx >= -20) ? dx : dx + 20;
             }
-        }
-        
-
-        this.bows.sort((a,b) => b.x - a.x);
-        for (let i = 0; i < this.bows.length; i++) {
-            let{x, y, dx, dy} = this.bows[i];
-            const trail = this.cat.position_queue[49 - i];
-            const rainbow_transform = Mat4.translation(x + this.cat.x, y + trail, 0.5).times(Mat4.scale(.25, .6, .1));
-            this.shapes.rainbow.draw(context, program_state, rainbow_transform, this.materials.texture_2);
-            this.bows[i].x += (x + dx >= -20) ? dx : dx + 20;
         }
 
 
