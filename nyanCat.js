@@ -54,8 +54,8 @@ export class NyanCat extends Scene {
             }),
 
 
-            planet2_phong: new Material(new defs.Phong_Shader(), {ambient: 1, diffusivity: 1, specularity: 1, color: hex_color("#FF0000")}),
-            planet2_gouraud: new Material(new Gouraud_Shader(), {
+            asteroid_phong: new Material(new defs.Phong_Shader(), {ambient: 1, diffusivity: 1, specularity: 1, color: hex_color("#FF0000")}),
+            asteroid_gouraud: new Material(new Gouraud_Shader(), {
                 ambient: 1, diffusivity: 1, specularity: 1, color: hex_color("#FF0000")
             })
         }
@@ -230,7 +230,7 @@ export class NyanCat extends Scene {
             const asteroid_transform = model_transform
                 .times(Mat4.translation(x, y, z))
                 .times(Mat4.scale(scale, scale, scale));
-            this.shapes.asteroid.draw(context, program_state, asteroid_transform, this.materials.planet2_phong);
+            this.shapes.asteroid.draw(context, program_state, asteroid_transform, this.materials.asteroid_phong);
             this.asteroids[i].x += (x + dx >= -6) ? dx : dx + 12;
             this.asteroids[i].y += dy;
             this.asteroids[i].z += dz;
