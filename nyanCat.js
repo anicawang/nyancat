@@ -75,7 +75,7 @@ export class NyanCat extends Scene {
             this.bows.push({
                 'x': -.9 - rain_x,
                 'y': 0,
-                'dx': 0,
+                'dx': -.02,
                 'dy': 0
             })
             rain_x += .5;
@@ -216,7 +216,7 @@ export class NyanCat extends Scene {
 
             const rainbow_transform = Mat4.translation(x + this.rainbowX, y + this.rainbowY, 0).times(Mat4.scale(.25, .6, .3));
             this.shapes.rainbow.draw(context, program_state, rainbow_transform, this.materials.texture_2);
-            //this.bows[i].x -= .01
+            this.bows[i].x += (x + dx >= -20) ? dx : dx + 20;
         }
 
 
