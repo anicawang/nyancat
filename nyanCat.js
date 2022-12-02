@@ -48,10 +48,6 @@ export class NyanCat extends Scene {
             })
         }
 
-        this.rainbow_transform = Mat4.translation(-4.25,0,0).times(Mat4.scale(3.75,.6,1));
-
-        this.rotate = false
-
         /* Starfield instantiation */
         // screen is roughly 6 x 3.5
         this.stars = [];
@@ -60,7 +56,7 @@ export class NyanCat extends Scene {
                 'x': 12 * (Math.random() - 0.5),
                 'y': 7 * (Math.random() - 0.5),
                 'z': -5 * (Math.random()),
-                'dx': -0.1 * (Math.random() + 0.3),
+                'dx': -0.075 * (Math.random() + 0.3),
                 'dy': 0,
                 'dz': 0,
                 'scale': 0.1,
@@ -74,16 +70,20 @@ export class NyanCat extends Scene {
         }
         this.cat_x = 0;
         this.cat_y = 0;
+        this.rainbowX = 0;
+        this.rainbowY = 0;
+        this.rainbowDX = 0;
+        this.rainbowDY = 0;
     }
 
 
 
     make_control_panel() {
         // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
-        this.key_triggered_button('Up', ['Control', 'w'], () => { this.cat.dy += 0.025 });
-        this.key_triggered_button('Left', ['Control', 'a'], () => { this.cat.dx -= 0.025 });
-        this.key_triggered_button('Down', ['Control', 's'], () => { this.cat.dy -= 0.025 });
-        this.key_triggered_button('Right', ['Control', 'd'], () => { this.cat.dx += 0.025 });
+        this.key_triggered_button('Up', ['Control', 'w'], () => { this.cat.dy += 0.025, this.rainbowDY += .025 });
+        this.key_triggered_button('Left', ['Control', 'a'], () => { this.cat.dx -= 0.025, this.rainbowDX -= .025 });
+        this.key_triggered_button('Down', ['Control', 's'], () => { this.cat.dy -= 0.025, this.rainbowDY -= .025 });
+        this.key_triggered_button('Right', ['Control', 'd'], () => { this.cat.dx += 0.025, this.rainbowDX += .025 });
         this.new_line();
         this.key_triggered_button("Forwards", ["i"], () => {
             this.cat_y += 0.1; 
@@ -191,13 +191,23 @@ export class NyanCat extends Scene {
         }
         /* Starfield End */
 
-        let rainbow_angle = (2. / 3.) * Math.PI * dt;
-        this.rainbow_transform = this.rotate ? this.rainbow_transform.times(Mat4.rotation(0, 0, 1, 0)) : this.rainbow_transform;
-
-        // Cube 1
-        // this.shapes.box_2.draw(context, program_state, this.box2_transform, this.materials.texture_2);
         // Rainbow
-        // this.shapes.rainbow.draw(context, program_state, this.rainbow_transform, this.materials.texture_2);
+
+        this.rainbowY += this.rainbowDY;
+        this.rainbowX += this.rainbowDX;
+
+        this.rainbowDX = Math.min(this.rainbowDX, 0.075);
+        this.rainbowDY = Math.min(this.rainbowDY, 0.075);
+
+        this.rainbowDY /= 1.01;
+        this.rainbowDX /= 1.01;
+
+
+        this.rainbow_transform = model_transform.times(Mat4.translation(-10.5 + this.rainbowX, 0 + this.rainbowY,0)
+            .times(Mat4.scale(10,.6,.3)));
+
+
+        this.shapes.rainbow.draw(context, program_state, this.rainbow_transform, this.materials.texture_2);
     }
 }
 
