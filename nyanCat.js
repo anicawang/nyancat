@@ -181,11 +181,20 @@ export class NyanCat extends Scene {
         this.cat.y += this.cat.dy;
         this.cat.x += this.cat.dx;
 
+        // Bound x and y within frame
+        if (Math.abs(this.cat.x) > 5) {
+            // this.cat.x = Math.sign(this.cat.x) * 5;
+            // this.cat.dx = -this.cat.dx;
+        }
+        // this.cat.y = Math.max(-2.5, this.cat.y);
+
         this.cat.dx = Math.min(this.cat.dx, 0.075);
         this.cat.dy = Math.min(this.cat.dy, 0.075);
 
         this.cat.dy /= 1.01;
         this.cat.dx /= 1.01;
+
+
 
         let pixel_transform = model_transform
             .times(Mat4.translation(-1 + this.cat.x, 0.6 + this.cat.y, 1))
