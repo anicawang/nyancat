@@ -115,16 +115,29 @@ export class NyanCat extends Scene {
         this.rainbowY = 0;
         this.rainbowDX = 0;
         this.rainbowDY = 0;
+
+        
     }
 
 
 
     make_control_panel() {
+        var audio = document.createElement('audio');
+        audio.src = "assets/cat_audio.mp3";
+        
         // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
         this.key_triggered_button('Up', ["i"], () => { this.cat.dy += 0.025, this.rainbowDY += .025 });
         this.key_triggered_button('Left', ["j"], () => { this.cat.dx -= 0.025, this.rainbowDX -= .025 });
         this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025, this.rainbowDY -= .025 });
         this.key_triggered_button('Right', ["l"], () => { this.cat.dx += 0.025, this.rainbowDX += .025 });
+        this.key_triggered_button('Music', ["m"], () => {
+            audio.play();
+        });
+        this.key_triggered_button('No music', ["n"], () => {
+            audio.pause();
+            audio.currentTime = 0;
+        });
+        
         this.new_line();
     }
 
