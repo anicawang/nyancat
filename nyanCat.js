@@ -267,45 +267,53 @@ export class NyanCat extends Scene {
 
 
         let pixel_transform = model_transform
-            .times(Mat4.rotation(Math.PI/2, 0, 1, 0))
-            .times(Mat4.translation(-1 + this.cat.x, 0.6 + this.cat.y, 1))
+            .times(Mat4.translation(this.cat.x, this.cat.y, 1));
             
             // .times(Mat4.translation(this.cat_x, this.cat_y, 0))
             // .times(Mat4.translation(-1, 0.6, 1))
-            
-        this.shapes.cat_body.draw(context, program_state, pixel_transform, this.materials.cat_body);
-
-        pixel_transform = pixel_transform
-            .times(Mat4.rotation(Math.PI/2, 0, 1, 0))
-            .times(Mat4.translation(this.cat.x-1, this.cat.y-0.25, 0))
+        const cat_body_transform = pixel_transform
+            .times(Mat4.rotation(Math.PI/2, 0, 1, 0));
+        
+        this.shapes.cat_body.draw(context, program_state, cat_body_transform, this.materials.cat_body);
+        
+        const cat_face_transform = pixel_transform
+            .times(Mat4.translation(1, -0.2, 0))
+            .times(Mat4.rotation(Math.PI, 0, 1, 0))
             .times(Mat4.scale(0.5, 0.6, 0.6))
-        this.shapes.cat_face.draw(context, program_state, pixel_transform, this.materials.cat_face);
+        this.shapes.cat_face.draw(context, program_state, cat_face_transform, this.materials.cat_face);
+        
+        const cat_ear1_transform = pixel_transform
+            .times(Mat4.translation(1, 0.2, 0.2))
+            .times(Mat4.scale(0.1, 0.1, 0.1))
+        this.shapes.cat_ear.draw(context, program_state, cat_ear1_transform, this.materials.cat_ear);
+        
+        const cat_ear2_transform = pixel_transform
+            .times(Mat4.translation(1, 0.2, -0.2))
+            .times(Mat4.scale(0.1, 0.1, 0.1))
 
-        pixel_transform = pixel_transform
-            .times(Mat4.scale(0.3, 0.3, 0.3))
-            .times(Mat4.translation(0, 2, 1))
+        this.shapes.cat_ear2.draw(context, program_state, cat_ear2_transform, this.materials.cat_ear);
 
-        this.shapes.cat_ear.draw(context, program_state, pixel_transform, this.materials.cat_ear);
+        
+        const cat_leg1_transform = pixel_transform
+            .times(Mat4.translation(0.5, -0.7, 0.1))
+            .times(Mat4.scale(0.2, 0.2, 0.2));
+        this.shapes.cat_leg1.draw(context, program_state, cat_leg1_transform, this.materials.cat_ear);
+        
+        const cat_leg2_transform = pixel_transform
+            .times(Mat4.translation(0.5, -0.7, -0.1))
+            .times(Mat4.scale(0.2, 0.2, 0.2));
+        this.shapes.cat_leg2.draw(context, program_state, cat_leg2_transform, this.materials.cat_ear);
 
-        pixel_transform = pixel_transform
-            .times(Mat4.translation(0, 0, -2))
-
-        this.shapes.cat_ear2.draw(context, program_state, pixel_transform, this.materials.cat_ear);
-
-        pixel_transform = pixel_transform
-            .times(Mat4.translation(10, -5, 0))
-        this.shapes.cat_leg1.draw(context, program_state, pixel_transform, this.materials.cat_ear);
-
-        this.shapes.cat_leg2.draw(context, program_state, pixel_transform.times(Mat4.translation(-6, 0, 0)), this.materials.cat_ear);
-
-        pixel_transform = pixel_transform
-            .times(Mat4.translation(0, 0, 2))
-        this.shapes.cat_leg2.draw(context, program_state, pixel_transform, this.materials.cat_ear);
-
-        pixel_transform = pixel_transform
-            .times(Mat4.translation(-6, 0, 0))
-        this.shapes.cat_leg3.draw(context, program_state, pixel_transform, this.materials.cat_ear);
-
+        const cat_leg3_transform = pixel_transform
+            .times(Mat4.translation(-0.5, -0.7, 0.1))
+            .times(Mat4.scale(0.2, 0.2, 0.2));
+        this.shapes.cat_leg3.draw(context, program_state, cat_leg3_transform, this.materials.cat_ear);
+        
+        const cat_leg4_transform = pixel_transform
+            .times(Mat4.translation(-0.5, -0.7, -0.1))
+            .times(Mat4.scale(0.2, 0.2, 0.2));
+        this.shapes.cat_leg4.draw(context, program_state, cat_leg4_transform, this.materials.cat_ear);
+        
         // for (let i = 0; i < cat_pixels.length; i++) {
         //     for (let j = 0; j < cat_pixels[i].length; j++) {
         //         pixel_transform = pixel_transform.times(Mat4.translation(2, 0, 0));
