@@ -100,12 +100,12 @@ export class NyanCat extends Scene {
 
         /* Asteroids */
         this.asteroids = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 4; i++) {
             this.asteroids.push({
                 'x': 12 * (Math.random() - 0.5),
                 'y': 7 * (Math.random() - 0.5),
                 'z': -5 * (Math.random()),
-                'dx': -0.075 * (Math.random() + 0.3),
+                'dx': -0.02 * (Math.random() + 2),
                 'dy': 0,
                 'dz': 0,
                 'scale': 0.25,
@@ -330,9 +330,24 @@ export class NyanCat extends Scene {
                 .times(Mat4.translation(x, y, z))
                 .times(Mat4.scale(scale, scale, scale));
             this.shapes.asteroid.draw(context, program_state, asteroid_transform, this.materials.asteroid_phong);
-            this.asteroids[i].x += (x + dx >= -6) ? dx : dx + 12;
+
+            this.asteroids[i].x += dx;
             this.asteroids[i].y += dy;
             this.asteroids[i].z += dz;
+            if (this.asteroids[i].x < -6) {
+                this.asteroids.splice(i, 1);
+                i--;
+                this.asteroids.push({
+                    'x': 9,
+                    'y': 7 * (Math.random() - 0.5),
+                    'z': -5 * (Math.random()),
+                    'dx': -0.02 * (Math.random() + 2),
+                    'dy': 0,
+                    'dz': 0,
+                    'scale': 0.25,
+                    'color': '#ffff99',
+                });
+            }
         }
 
         /* Asteroids End */
