@@ -53,7 +53,9 @@ export class NyanCat extends Scene {
                 color: hex_color("#ff0000"),
             }),
 
-            planet2_gouraud: new Material(new Gouraud_Shader(), {
+
+            asteroid_phong: new Material(new defs.Phong_Shader(), {ambient: 1, diffusivity: 1, specularity: 1, color: hex_color("#FF0000")}),
+            asteroid_gouraud: new Material(new Gouraud_Shader(), {
                 ambient: 1, diffusivity: 1, specularity: 1, color: hex_color("#FF0000")
             })
         }
@@ -77,7 +79,7 @@ export class NyanCat extends Scene {
 
         /* Asteroids */
         this.asteroids = [];
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 3; i++) {
             this.asteroids.push({
                 'x': 12 * (Math.random() - 0.5),
                 'y': 7 * (Math.random() - 0.5),
@@ -85,7 +87,7 @@ export class NyanCat extends Scene {
                 'dx': -0.075 * (Math.random() + 0.3),
                 'dy': 0,
                 'dz': 0,
-                'scale': 0.1,
+                'scale': 0.25,
                 'color': '#ffff99',
             });
         }
@@ -113,16 +115,29 @@ export class NyanCat extends Scene {
         this.rainbowY = 0;
         this.rainbowDX = 0;
         this.rainbowDY = 0;
+
+        
     }
 
 
 
     make_control_panel() {
+        var audio = document.createElement('audio');
+        audio.src = "assets/cat_audio.mp3";
+        
         // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
         this.key_triggered_button('Up', ["i"], () => { this.cat.dy += 0.025, this.rainbowDY += .025 });
         this.key_triggered_button('Left', ["j"], () => { this.cat.dx -= 0.025, this.rainbowDX -= .025 });
         this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025, this.rainbowDY -= .025 });
         this.key_triggered_button('Right', ["l"], () => { this.cat.dx += 0.025, this.rainbowDX += .025 });
+        this.key_triggered_button('Music', ["m"], () => {
+            audio.play();
+        });
+        this.key_triggered_button('No music', ["n"], () => {
+            audio.pause();
+            audio.currentTime = 0;
+        });
+        
         this.new_line();
     }
 
@@ -237,7 +252,7 @@ export class NyanCat extends Scene {
             const asteroid_transform = model_transform
                 .times(Mat4.translation(x, y, z))
                 .times(Mat4.scale(scale, scale, scale));
-            this.shapes.asteroid.draw(context, program_state, asteroid_transform, this.materials.planet2_gouraud);
+            this.shapes.asteroid.draw(context, program_state, asteroid_transform, this.materials.asteroid_phong);
             this.asteroids[i].x += (x + dx >= -6) ? dx : dx + 12;
             this.asteroids[i].y += dy;
             this.asteroids[i].z += dz;
