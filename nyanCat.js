@@ -48,6 +48,10 @@ export class NyanCat extends Scene {
 
             asteroid: new Material(new defs.Phong_Shader(),
                 {diffusivity: 1, color: hex_color("#808080")}),
+            texture_1: new Material(new defs.Phong_Shader(), {
+                color: hex_color("#184a7a"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+            }),
             texture_2: new Material(new Texture_Scroll_X(), {
                 color: hex_color("#000000"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
@@ -162,13 +166,8 @@ export class NyanCat extends Scene {
         audio.src = "assets/cat_audio.mp3";
         
         // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
-
-        this.key_triggered_button('Up', ["i"], () => { this.cat.dy += 0.025, this.rainbowDY += .025 });
-        this.key_triggered_button('Left', ["j"], () => { this.cat.dx -= 0.025, this.rainbowDX -= .025 });
-        this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025, this.rainbowDY -= .025 });
         
         // play and pause sound
-        this.key_triggered_button('Right', ["l"], () => { this.cat.dx += 0.025, this.rainbowDX += .025 });
         this.key_triggered_button('Up', ["i"], () => { this.cat.dy += 0.025 });
         this.key_triggered_button('Left', ["j"], () => { this.cat.dx -= 0.025 });
         this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025 });
@@ -352,6 +351,7 @@ export class NyanCat extends Scene {
                 .times(Mat4.translation(x, y, z))
                 .times(Mat4.scale(scale, 0.1 * scale, 0.1 * scale));
             this.shapes.pixel.draw(context, program_state, star_transform, this.materials.pixel.override({color: hex_color(color)}));
+            // program_state.lights.push(new Light(vec4(x, y, z, 1), hex_color('#ffffff'), 1));
             this.stars[i].x += (x + dx >= -6) ? dx : dx + 12;
             this.stars[i].y += dy;
             this.stars[i].z += dz;
@@ -388,8 +388,8 @@ export class NyanCat extends Scene {
                 });
                 continue;
             }
-            if (this.asteroids[i].x <= this.cat.x + 1 && this.asteroids[i].x >= this.cat.x - 1 &&
-            this.asteroids[i].y <= this.cat.y + 1 && this.asteroids[i].y >= this.cat.y - 0.7) {
+            if (this.asteroids[i].x <= this.cat.x + 0.8 && this.asteroids[i].x >= this.cat.x - 1 &&
+            this.asteroids[i].y <= this.cat.y + 0.8 && this.asteroids[i].y >= this.cat.y - 0.7) {
                 this.alive = false;
             }
         }
@@ -429,6 +429,12 @@ export class NyanCat extends Scene {
                 this.new_bows[i].x += (x + dx >= -20) ? dx : dx + 20;
             }
         }
+
+        /* Background */
+        const background_transform = model_transform
+            .times(Mat4.translation(0, 0, -10))
+            .times(Mat4.scale(20, 10, 1));
+        this.shapes.box_1.draw(context, program_state, background_transform, this.materials.texture_1);
 
 
         /*let rain_x = 0;
