@@ -48,6 +48,10 @@ export class NyanCat extends Scene {
 
             asteroid: new Material(new defs.Phong_Shader(),
                 {diffusivity: 1, color: hex_color("#808080")}),
+            texture_1: new Material(new defs.Phong_Shader(), {
+                color: vec4(24/255, 74/255, 122/255, 1.0),//# hex_color("#184a7a"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+            }),
             texture_2: new Material(new Texture_Scroll_X(), {
                 color: hex_color("#000000"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
@@ -181,13 +185,8 @@ export class NyanCat extends Scene {
         audio.src = "assets/cat_audio.mp3";
         
         // TODO:  Implement requirement #5 using a key_triggered_button that responds to the 'c' key.
-
-        this.key_triggered_button('Up', ["i"], () => { this.cat.dy += 0.025, this.rainbowDY += .025 });
-        this.key_triggered_button('Left', ["j"], () => { this.cat.dx -= 0.025, this.rainbowDX -= .025 });
-        this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025, this.rainbowDY -= .025 });
         
         // play and pause sound
-        this.key_triggered_button('Right', ["l"], () => { this.cat.dx += 0.025, this.rainbowDX += .025 });
         this.key_triggered_button('Up', ["i"], () => { this.cat.dy += 0.025 });
         this.key_triggered_button('Left', ["j"], () => { this.cat.dx -= 0.025 });
         this.key_triggered_button('Down', ["k"], () => { this.cat.dy -= 0.025 });
@@ -380,6 +379,7 @@ export class NyanCat extends Scene {
                 .times(Mat4.translation(x, y, z))
                 .times(Mat4.scale(scale, 0.1 * scale, 0.1 * scale));
             this.shapes.pixel.draw(context, program_state, star_transform, this.materials.pixel.override({color: hex_color(color)}));
+            // program_state.lights.push(new Light(vec4(x, y, z, 1), hex_color('#ffffff'), 1));
             this.stars[i].x += (x + dx >= -6) ? dx : dx + 12;
             this.stars[i].y += dy;
             this.stars[i].z += dz;
@@ -457,6 +457,15 @@ export class NyanCat extends Scene {
                 this.new_bows[i].x += (x + dx >= -20) ? dx : dx + 20;
             }
         }
+
+        /* Background */
+        const magnitude = (Math.cos(t * 0.1) + 0.5) * 0.5;
+        const background_color = vec4(24/255 * magnitude, 74/255 * magnitude, 122/255 * magnitude, 1.0)
+
+        const background_transform = model_transform
+            .times(Mat4.translation(0, 0, -10))
+            .times(Mat4.scale(40, 40, 1));
+        this.shapes.box_1.draw(context, program_state, background_transform, this.materials.texture_1.override({color: background_color}));
 
 
         /*let rain_x = 0;
