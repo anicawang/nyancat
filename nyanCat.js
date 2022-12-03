@@ -1,4 +1,4 @@
-import {defs, tiny} from './examples/common.js';
+import {defs, tiny} from './common.js';
 
 const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene, Texture,
@@ -457,6 +457,8 @@ export class NyanCat extends Scene {
                 this.new_bows[i].x += (x + dx >= -20) ? dx : dx + 20;
             }
         }
+
+
 
         /* Background */
         const magnitude = (Math.cos(t * 0.1) + 0.5) * 0.5;

@@ -3,6 +3,20 @@
   <component name="ChangeListManager">
     <list default="true" id="59c37c85-1375-4bf0-9bf8-0cb1f5d2ff7e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/earth.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/rgb.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/stars.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/teapot.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/axes-viewer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/collisions-demo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/many-lights-demo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/obj-file-demo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/scene-to-texture-demo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/surfaces-demo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/text-demo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/transforms-sandbox.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main-scene.js" beforeDir="false" afterPath="$PROJECT_DIR$/main-scene.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nyanCat.js" beforeDir="false" afterPath="$PROJECT_DIR$/nyanCat.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,9 +46,15 @@
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "C:/Users/danie/Downloads/F22-Assignment-2/F22-Assignment-2",
     "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\danie\OneDrive\Desktop\cs174a\nyancat" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -45,7 +65,7 @@
       <updated>1668068658627</updated>
       <workItem from="1668068660498" duration="4616000" />
       <workItem from="1669958165453" duration="12090000" />
-      <workItem from="1669976073233" duration="9373000" />
+      <workItem from="1669976073233" duration="12150000" />
     </task>
     <servers />
   </component>
